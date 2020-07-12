@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -6,91 +7,105 @@
  * @flow
  */
 
-import React, {Fragment} from 'react';
+import React from 'react';
+import {observable} from 'mobx';
+import {observer} from 'mobx-react';
 import {
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
-  StatusBar,
-  Image,
+  FlatList,
+  Alert,
+  Button,
+  Picker,
+  Switch,
+  ActivityIndicator,
 } from 'react-native';
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import Counter from '../../components/Counter';
+const DATA = [
+  {
+    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+    title: 'First Item',
+  },
+  {
+    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+    title: 'Second Item',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd96-145571e29d72',
+    title: 'Third Item',
+  },
+];
 
-import EnvironmentConstants from '../../constants/EnvironmentConstants';
-import {goToLaunchScene} from '../../utils/NavigationUtils';
-import Images from '../../images';
-import I18n from '../../i18n/i18n';
+const Item = ({title}) => (
+  <View>
+    <Text style={{color: 'red'}}>{title}</Text>
+  </View>
+);
 
-var global: any;
-const AppScene = () => {
-  const goToLaunchScreen = () => {
-    goToLaunchScene();
+@observer
+class AppScene extends React.Component {
+  @observable selectedText: any;
+  @observable isEnabled: boolean = false;
+  changeText = (text: string) => {
+    Alert.alert(text);
   };
-  return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <Image source={Images.ibHubsLogo} />
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text>{EnvironmentConstants.SAMPLE_ENV_VARIABLE}</Text>
-              <Text style={styles.sectionTitle}>{I18n.t('stepOne')}</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle} onPress={goToLaunchScreen}>
-                Debug
-              </Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-            <Counter />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
-  );
-};
+
+  assignSelectedText = (text: string) => {
+    Alert.alert(text);
+  };
+
+  toggleSwitch = () => {
+    const stringValue = this.isEnabled ? 'true' : 'false';
+    Alert.alert(stringValue);
+    this.isEnabled = !this.isEnabled;
+  };
+
+  renderItem = ({item}) => {
+    return <Item title={item.title} />;
+  };
+
+  render() {
+    return (
+      <ScrollView horizontal={true}>
+        <View style={styles.sectionContainer}>
+          <Text>Raja</Text>
+          <Button
+            color="red"
+            onPress={() => {
+              Alert.alert('raja');
+            }}
+            title="Press me"
+          />
+          <ActivityIndicator size="large" color="green" />
+          <Picker
+            style={{height: 140, width: 150}}
+            onValueChange={text => {
+              this.assignSelectedText(text);
+            }}>
+            <Picker.Item label="raja" value="raja" />
+            <Picker.Item label="the" value="the" />
+            <Picker.Item label="king" value="king" />
+          </Picker>
+          <Switch
+            trackColor={{false: 'red', true: 'green'}}
+            thumbColor={this.isEnabled ? 'red' : 'black'}
+            ios_backgroundColor="red"
+            onValueChange={this.toggleSwitch}
+            value={this.isEnabled}
+          />
+          <FlatList data={DATA} renderItem={this.renderItem} />
+        </View>
+      </ScrollView>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   scrollView: {
-    backgroundColor: Colors.lighter,
+    backgroundColor: Colors.red,
   },
   engine: {
     position: 'absolute',
@@ -98,6 +113,10 @@ const styles = StyleSheet.create({
   },
   body: {
     backgroundColor: Colors.white,
+  },
+  rajaTheKingColor: {
+    backgroundColor: 'darkgreen',
+    color: 'white',
   },
   sectionContainer: {
     marginTop: 32,

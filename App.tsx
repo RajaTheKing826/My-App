@@ -10,7 +10,7 @@ import React, {Fragment} from 'react';
 import {SafeAreaView, StyleSheet, StatusBar} from 'react-native';
 
 import NavigationRouter from './app/navigation/NavigationRouter';
-
+console.disableYellowBox = true;
 const App = () => {
   return (
     <Fragment>
